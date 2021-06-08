@@ -24,3 +24,49 @@ export function resolveChromaKeyerState(
 
 	return commands
 }
+
+export function resolveAdvancedChromaKeyerState(
+	mixEffectId: number,
+	upstreamKeyerId: number,
+	oldKeyer: PartialDeep<VideoState.USK.UpstreamKeyer>,
+	newKeyer: PartialDeep<VideoState.USK.UpstreamKeyer>
+): Array<AtemCommands.ISerializableCommand> {
+	const commands: Array<AtemCommands.ISerializableCommand> = []
+
+	if (!oldKeyer.advancedChromaSettings && !newKeyer.advancedChromaSettings) return commands
+
+	{
+		const oldProperties = fillDefaults(
+			Defaults.Video.UpstreamKeyerAdvancedChromaProperties,
+			oldKeyer.advancedChromaSettings?.properties
+		)
+		const newProperties = fillDefaults(
+			Defaults.Video.UpstreamKeyerAdvancedChromaProperties,
+			newKeyer.advancedChromaSettings?.properties
+		)
+
+		const props = diffObject(oldProperties, newProperties)
+		const command = new AtemCommands.MixEffectKeyAdvancedChromaPropertiesCommand(mixEffectId, upstreamKeyerId)
+		if (command.updateProps(props)) {
+			commands.push(command)
+		}
+	}
+	{
+		const oldProperties = fillDefaults(
+			Defaults.Video.UpstreamKeyerAdvancedChromaSample,
+			oldKeyer.advancedChromaSettings?.sample
+		)
+		const newProperties = fillDefaults(
+			Defaults.Video.UpstreamKeyerAdvancedChromaSample,
+			newKeyer.advancedChromaSettings?.sample
+		)
+
+		const props = diffObject(oldProperties, newProperties)
+		const command = new AtemCommands.MixEffectKeyAdvancedChromaSampleCommand(mixEffectId, upstreamKeyerId)
+		if (command.updateProps(props)) {
+			commands.push(command)
+		}
+	}
+
+	return commands
+}

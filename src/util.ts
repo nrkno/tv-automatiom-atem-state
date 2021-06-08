@@ -6,7 +6,18 @@ export function diffObject<T>(oldObj: Partial<T>, newObj: Partial<T>): Partial<T
 	const diff: Partial<T> = {}
 	for (const key in newObj) {
 		const typedKey = key as keyof T
-		if (newObj[typedKey] !== oldObj[typedKey]) {
+		if (newObj[typedKey] && oldObj[typedKey] && Array.isArray(newObj[typedKey]) && Array.isArray(oldObj[typedKey])) {
+			// We need to compare array contents, not the arrays themselves
+
+			const newArr: any[] = newObj[typedKey] as any
+			const oldArr: any[] = oldObj[typedKey] as any
+			newArr.sort()
+			oldArr.sort()
+
+			if (newArr.length !== oldArr.length || !newArr.every((val, index) => val === oldArr[index])) {
+				diff[typedKey] = newObj[typedKey]
+			}
+		} else if (newObj[typedKey] !== oldObj[typedKey]) {
 			diff[typedKey] = newObj[typedKey]
 		}
 	}
@@ -45,5 +56,5 @@ export function jsonClone<T>(src: T): T {
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export function fillDefaults<T extends object>(defaults: T, val: PartialDeep<T> | PartialObjectDeep<T> | undefined): T {
-	return deepMerge(defaults, (val ?? {}) as Partial<T>)
+	return deepMerge(defaults, (val ?? {}) as Partial<T>, { arrayMerge: (_dest, src) => src })
 }

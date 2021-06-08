@@ -106,9 +106,9 @@ export const WipeTransitionSettings: VideoState.WipeTransitionSettings = {
 
 export const TransitionProperties: VideoState.TransitionProperties = {
 	style: Enums.TransitionStyle.MIX,
-	selection: 1,
+	selection: [Enums.TransitionSelection.Background],
 	nextStyle: Enums.TransitionStyle.MIX,
-	nextSelection: 1,
+	nextSelection: [Enums.TransitionSelection.Background],
 }
 
 export const UpstreamKeyerMask: VideoState.USK.UpstreamKeyerMaskSettings = {
@@ -154,6 +154,29 @@ export const UpstreamKeyerChromaSettings: VideoState.USK.UpstreamKeyerChromaSett
 	ySuppress: 0,
 	lift: 0,
 	narrow: false,
+}
+export const UpstreamKeyerAdvancedChromaProperties: VideoState.USK.UpstreamKeyerAdvancedChromaProperties = {
+	foregroundLevel: 0,
+	backgroundLevel: 0,
+	keyEdge: 0,
+	spillSuppression: 0,
+	flareSuppression: 0,
+	brightness: 0,
+	contrast: 0,
+	saturation: 0,
+	red: 0,
+	green: 0,
+	blue: 0,
+}
+export const UpstreamKeyerAdvancedChromaSample: VideoState.USK.UpstreamKeyerAdvancedChromaSample = {
+	enableCursor: false,
+	preview: false,
+	cursorX: 0,
+	cursorY: 0,
+	cursorSize: 0,
+	sampledY: 0,
+	sampledCb: 0,
+	sampledCr: 0,
 }
 export const UpstreamKeyerDVESettings: VideoState.USK.UpstreamKeyerDVESettings = {
 	borderEnabled: false,

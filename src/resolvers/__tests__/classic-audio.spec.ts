@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import * as audio from '../audio'
+import { resolveClassicAudioState } from '../classic-audio'
 import { jsonClone } from '../../util'
 import { AudioState, Commands, AtemStateUtil } from 'atem-connection'
 
@@ -50,14 +50,14 @@ STATE2.audio.master = {
 
 test('Unit: audio: same state gives no commands', function () {
 	// same state gives no commands:
-	const commands = audio.resolveAudioState(STATE1, STATE1)
+	const commands = resolveClassicAudioState(STATE1, STATE1)
 	expect(commands).toHaveLength(0)
 })
 
 test('Unit: audio: channel command', function () {
 	STATE2.audio!.channels[0]!.gain = -192
 
-	const commands = audio.resolveAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
+	const commands = resolveClassicAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
 	expect(commands).toHaveLength(1)
 	expect(commands[0].constructor.name).toEqual('AudioMixerInputCommand')
 	expect(commands[0].index).toEqual(0)
@@ -71,7 +71,7 @@ test('Unit: audio: new channel', function () {
 	const c = STATE1.audio!.channels[1]!
 	delete STATE1.audio!.channels[1]
 
-	const commands = audio.resolveAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
+	const commands = resolveClassicAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
 	expect(commands).toHaveLength(1)
 	expect(commands[0].constructor.name).toEqual('AudioMixerInputCommand')
 	expect(commands[0].index).toEqual(1)
@@ -86,7 +86,7 @@ test('Unit: audio: new channel', function () {
 test('Unit: audio: master channel', function () {
 	STATE2.audio!.master!.gain = -10
 
-	const commands = audio.resolveAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
+	const commands = resolveClassicAudioState(STATE1, STATE2) as Array<Commands.AudioMixerInputCommand>
 	expect(commands).toHaveLength(1)
 	expect(commands[0].constructor.name).toEqual('AudioMixerMasterCommand')
 	expect(commands[0].properties).toEqual({

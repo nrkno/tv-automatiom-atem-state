@@ -206,7 +206,10 @@ test('Unit: mix effect: from transition, to no transition', function () {
 })
 
 test('Unit: mix effect: transition properties', function () {
-	ME2.transitionProperties.nextSelection = 3
+	ME2.transitionProperties.nextSelection = [
+		AtemEnums.TransitionSelection.Background,
+		AtemEnums.TransitionSelection.Key1,
+	]
 	ME2.transitionProperties.nextStyle = 1
 	const commands = ME.resolveTransitionPropertiesState(0, ME1, ME2) as Array<Commands.TransitionPropertiesCommand>
 	expect(commands).toHaveLength(1)
@@ -214,13 +217,13 @@ test('Unit: mix effect: transition properties', function () {
 	expect(commands[0].constructor.name).toEqual('TransitionPropertiesCommand')
 	expect(commands[0].mixEffect).toEqual(0)
 	expect(commands[0].properties).toEqual({
-		nextSelection: 3,
+		nextSelection: [AtemEnums.TransitionSelection.Background, AtemEnums.TransitionSelection.Key1],
 		nextStyle: 1,
 	})
 
 	ME2.transitionProperties = {
 		...ME2.transitionProperties,
-		selection: 1,
+		selection: [AtemEnums.TransitionSelection.Background],
 		style: 0,
 	}
 })
